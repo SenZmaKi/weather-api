@@ -15,7 +15,7 @@ from app.api.schemas import (
     SearchHistoryResponse,
     SearchHistoryItem,
     ErrorResponse,
-    DeleteHistoryResponse
+    DeleteHistoryResponse,
 )
 
 router = APIRouter(prefix="/weather", tags=["weather"])
@@ -41,39 +41,41 @@ def parse_weather_data(data: Dict[str, Any]) -> WeatherResponse:
         weather=data["weather"][0]["main"],
         weather_description=data["weather"][0]["description"],
         weather_icon=data["weather"][0]["icon"],
-        timestamp=datetime.fromtimestamp(data["dt"])
+        timestamp=datetime.fromtimestamp(data["dt"]),
     )
 
 
 def parse_forecast_data(data: Dict[str, Any], days: int) -> ForecastResponse:
     """Parse OpenWeatherMap forecast data to ForecastResponse schema."""
     forecast_items = []
-    
+
     for item in data["list"]:
-        forecast_items.append(ForecastItem(
-            datetime=datetime.fromtimestamp(item["dt"]),
-            temperature=item["main"]["temp"],
-            feels_like=item["main"]["feels_like"],
-            temp_min=item["main"]["temp_min"],
-            temp_max=item["main"]["temp_max"],
-            pressure=item["main"]["pressure"],
-            humidity=item["main"]["humidity"],
-            weather=item["weather"][0]["main"],
-            weather_description=item["weather"][0]["description"],
-            weather_icon=item["weather"][0]["icon"],
-            wind_speed=item["wind"]["speed"],
-            wind_deg=item["wind"]["deg"],
-            clouds=item["clouds"]["all"],
-            pop=item.get("pop", 0)
-        ))
-    
+        forecast_items.append(
+            ForecastItem(
+                datetime=datetime.fromtimestamp(item["dt"]),
+                temperature=item["main"]["temp"],
+                feels_like=item["main"]["feels_like"],
+                temp_min=item["main"]["temp_min"],
+                temp_max=item["main"]["temp_max"],
+                pressure=item["main"]["pressure"],
+                humidity=item["main"]["humidity"],
+                weather=item["weather"][0]["main"],
+                weather_description=item["weather"][0]["description"],
+                weather_icon=item["weather"][0]["icon"],
+                wind_speed=item["wind"]["speed"],
+                wind_deg=item["wind"]["deg"],
+                clouds=item["clouds"]["all"],
+                pop=item.get("pop", 0),
+            )
+        )
+
     return ForecastResponse(
         city=data["city"]["name"],
         country=data["city"]["country"],
         latitude=data["city"]["coord"]["lat"],
         longitude=data["city"]["coord"]["lon"],
         days_requested=days,
-        forecast=forecast_items
+        forecast=forecast_items,
     )
 
 
@@ -83,24 +85,24 @@ def parse_forecast_data(data: Dict[str, Any], days: int) -> ForecastResponse:
     responses={
         400: {"model": ErrorResponse},
         404: {"model": ErrorResponse},
-        500: {"model": ErrorResponse}
+        500: {"model": ErrorResponse},
     },
     summary="Get current weather",
-    description="Get current weather by city name or coordinates"
+    description="Get current weather by city name or coordinates",
 )
 async def get_weather(
     city: Optional[str] = Query(None, description="City name"),
     lat: Optional[float] = Query(None, description="Latitude", ge=-90, le=90),
     lon: Optional[float] = Query(None, description="Longitude", ge=-180, le=180),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ) -> WeatherResponse:
     """
     Get current weather data.
-    
+
     Either city or both lat and lon must be provided.
     """
     weather_service = WeatherService()
-    
+
     try:
         if city:
             # Get weather by city
@@ -113,36 +115,36 @@ async def get_weather(
         else:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Either 'city' or both 'lat' and 'lon' parameters are required"
+                detail="Either 'city' or both 'lat' and 'lon' parameters are required",
             )
-        
+
         # Parse response
         weather_response = parse_weather_data(data)
-        
+
         # Save to search history
         history_entry = SearchHistory(
             search_type=search_type,
             city=city if city else weather_response.city,
             latitude=lat if lat is not None else weather_response.latitude,
             longitude=lon if lon is not None else weather_response.longitude,
-            response_data=json.dumps(data)
+            response_data=json.dumps(data),
         )
         db.add(history_entry)
         await db.commit()
-        
+
         return weather_response
-        
+
     except HTTPException:
         raise
     except Exception as e:
         if "404" in str(e):
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Weather data not found for the specified location"
+                detail="Weather data not found for the specified location",
             )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to fetch weather data: {str(e)}"
+            detail=f"Failed to fetch weather data: {str(e)}",
         )
 
 
@@ -152,25 +154,25 @@ async def get_weather(
     responses={
         400: {"model": ErrorResponse},
         404: {"model": ErrorResponse},
-        500: {"model": ErrorResponse}
+        500: {"model": ErrorResponse},
     },
     summary="Get weather forecast",
-    description="Get weather forecast for 1-5 days"
+    description="Get weather forecast for 1-5 days",
 )
 async def get_weather_forecast(
     city: str = Query(..., description="City name"),
     days: int = Query(5, description="Number of days (1-5)", ge=1, le=5),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ) -> ForecastResponse:
     """Get weather forecast for the specified city and number of days."""
     weather_service = WeatherService()
-    
+
     try:
         data = await weather_service.get_weather_forecast(city, days)
-        
+
         # Parse response
         forecast_response = parse_forecast_data(data, days)
-        
+
         # Save to search history
         history_entry = SearchHistory(
             search_type="forecast",
@@ -178,22 +180,22 @@ async def get_weather_forecast(
             latitude=forecast_response.latitude,
             longitude=forecast_response.longitude,
             forecast_days=days,
-            response_data=json.dumps(data)
+            response_data=json.dumps(data),
         )
         db.add(history_entry)
         await db.commit()
-        
+
         return forecast_response
-        
+
     except Exception as e:
         if "404" in str(e):
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Weather forecast not found for city: {city}"
+                detail=f"Weather forecast not found for city: {city}",
             )
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Failed to fetch weather forecast: {str(e)}"
+            detail=f"Failed to fetch weather forecast: {str(e)}",
         )
 
 
@@ -201,20 +203,18 @@ async def get_weather_forecast(
     "/history",
     response_model=SearchHistoryResponse,
     summary="Get search history",
-    description="Retrieve all weather search history"
+    description="Retrieve all weather search history",
 )
 async def get_search_history(
     limit: int = Query(100, description="Maximum number of records", ge=1, le=1000),
     offset: int = Query(0, description="Number of records to skip", ge=0),
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ) -> SearchHistoryResponse:
     """Get weather search history."""
     # Get total count
-    count_result = await db.execute(
-        select(SearchHistory).limit(1)
-    )
+    count_result = await db.execute(select(SearchHistory).limit(1))
     total = len(count_result.all())
-    
+
     # Get paginated results
     result = await db.execute(
         select(SearchHistory)
@@ -223,10 +223,10 @@ async def get_search_history(
         .offset(offset)
     )
     history_items = result.scalars().all()
-    
+
     return SearchHistoryResponse(
         total=total,
-        items=[SearchHistoryItem.model_validate(item) for item in history_items]
+        items=[SearchHistoryItem.model_validate(item) for item in history_items],
     )
 
 
@@ -234,16 +234,15 @@ async def get_search_history(
     "/history",
     response_model=DeleteHistoryResponse,
     summary="Clear search history",
-    description="Delete all weather search history"
+    description="Delete all weather search history",
 )
 async def clear_search_history(
-    db: AsyncSession = Depends(get_db)
+    db: AsyncSession = Depends(get_db),
 ) -> DeleteHistoryResponse:
     """Clear all weather search history."""
     result = await db.execute(delete(SearchHistory))
     await db.commit()
-    
+
     return DeleteHistoryResponse(
-        message="Search history cleared successfully",
-        deleted_count=result.rowcount
+        message="Search history cleared successfully", deleted_count=result.rowcount
     )

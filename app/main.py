@@ -2,7 +2,7 @@
 
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -31,7 +31,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator:
 # Create rate limiter
 limiter = Limiter(
     key_func=get_remote_address,
-    default_limits=[f"{settings.rate_limit_per_minute}/minute"]
+    default_limits=[f"{settings.rate_limit_per_minute}/minute"],
 )
 
 # Create FastAPI app
@@ -42,7 +42,7 @@ app = FastAPI(
     lifespan=lifespan,
     docs_url="/docs",
     redoc_url="/redoc",
-    openapi_url="/openapi.json"
+    openapi_url="/openapi.json",
 )
 
 # Add rate limiting
@@ -89,9 +89,10 @@ async def health_check() -> dict:
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(
         "app.main:app",
         host=settings.app_host,
         port=settings.app_port,
-        reload=settings.debug
+        reload=settings.debug,
     )
