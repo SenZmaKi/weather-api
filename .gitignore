@@ -48,3 +48,6 @@ logs/
 
 # Ruff
 .ruff_cache/
+
+# Claude
+.claude/
