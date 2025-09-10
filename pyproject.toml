@@ -11,6 +11,7 @@ dependencies = [
     "aiosqlite>=0.21.0",
     "fastapi>=0.116.1",
     "httpx>=0.28.1",
+    "pydantic-settings>=2.10.1",
     "python-dotenv>=1.1.1",
     "python-multipart>=0.0.20",
     "slowapi>=0.1.9",
