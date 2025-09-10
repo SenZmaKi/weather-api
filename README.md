@@ -6,34 +6,45 @@ https://github.com/user-attachments/assets/eebd1b8a-5aaa-4549-91eb-433147f7d789
 
 ## Table of Contents
 
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Running the Application](#running-the-application)
-  - [Development Mode](#development-mode)
-  - [Production Mode](#production-mode)
-- [API Endpoints](#api-endpoints)
-  - [Get Current Weather](#get-current-weather)
-  - [Get Weather Forecast](#get-weather-forecast)
-  - [Get Search History](#get-search-history)
-  - [Clear Search History](#clear-search-history)
-- [Environment Configuration](#environment-configuration)
-- [Project Structure](#project-structure)
-- [Features in Detail](#features-in-detail)
-  - [Rate Limiting](#rate-limiting)
-  - [Error Handling](#error-handling)
-  - [Search History](#search-history)
-  - [Type Safety](#type-safety)
-- [Testing](#testing)
-- [Browser Testing](#browser-testing)
-- [API Documentation](#api-documentation)
-- [Development](#development)
-  - [Adding New Features](#adding-new-features)
-  - [Database Migrations](#database-migrations)
-- [Deployment Considerations](#deployment-considerations)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
+- [Weather API Service](#weather-api-service)
+  - [Table of Contents](#table-of-contents)
+  - [Live Demo](#live-demo)
+  - [Features](#features)
+  - [Tech Stack](#tech-stack)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Running the Application](#running-the-application)
+    - [Development Mode](#development-mode)
+    - [Production Mode](#production-mode)
+  - [API Endpoints](#api-endpoints)
+    - [Get Current Weather](#get-current-weather)
+    - [Get Weather Forecast](#get-weather-forecast)
+    - [Get Search History](#get-search-history)
+    - [Clear Search History](#clear-search-history)
+  - [Environment Configuration](#environment-configuration)
+  - [Project Structure](#project-structure)
+  - [Features in Detail](#features-in-detail)
+    - [Rate Limiting](#rate-limiting)
+    - [Error Handling](#error-handling)
+    - [Search History](#search-history)
+    - [Type Safety](#type-safety)
+  - [Testing](#testing)
+  - [Browser Testing](#browser-testing)
+  - [API Documentation](#api-documentation)
+  - [Development](#development)
+    - [Adding New Features](#adding-new-features)
+    - [Database Migrations](#database-migrations)
+  - [Deployment Considerations](#deployment-considerations)
+  - [License](#license)
+  - [Acknowledgments](#acknowledgments)
+
+## Live Demo
+
+The application is live and accessible at:
+
+- **Web Interface**: http://91.98.38.42:8000
+- **API Documentation (Swagger)**: http://91.98.38.42:8000/docs
+- **API Documentation (ReDoc)**: http://91.98.38.42:8000/redoc
 
 ## Features
 
@@ -225,7 +236,6 @@ weather-api/
 ```
 
 ## Features in Detail
-
 
 ### Rate Limiting
 
