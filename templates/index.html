@@ -1,134 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weather API Service</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>Weather Service</h1>
-            <p>Get real-time weather data and forecasts</p>
-        </header>
-
-        <div class="search-section">
-            <div class="search-tabs">
-                <button class="tab-btn active" data-tab="city">Search by City</button>
-                <button class="tab-btn" data-tab="coordinates">Search by Coordinates</button>
-                <button class="tab-btn" data-tab="forecast">Get Forecast</button>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather Service</title>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/static/css/styles.css" />
+  </head>
+  <body>
+    <div class="app-layout">
+      <!-- Header -->
+      <header class="app-header">
+        <div class="header-content">
+          <a href="/" class="logo-link">
+            <div class="logo">
+              <div class="logo-icon">☁️</div>
+              <h1>Weather Service</h1>
             </div>
-
-            <div class="search-forms">
-                <!-- City Search Form -->
-                <form id="city-form" class="search-form active">
-                    <div class="form-group">
-                        <input type="text" id="city-input" placeholder="Enter city name..." required>
-                        <button type="submit" class="btn btn-primary">Get Weather</button>
-                    </div>
-                </form>
-
-                <!-- Coordinates Search Form -->
-                <form id="coordinates-form" class="search-form">
-                    <div class="form-group">
-                        <input type="number" id="lat-input" placeholder="Latitude" step="0.0001" min="-90" max="90" required>
-                        <input type="number" id="lon-input" placeholder="Longitude" step="0.0001" min="-180" max="180" required>
-                        <button type="submit" class="btn btn-primary">Get Weather</button>
-                    </div>
-                </form>
-
-                <!-- Forecast Form -->
-                <form id="forecast-form" class="search-form">
-                    <div class="form-group">
-                        <input type="text" id="forecast-city-input" placeholder="Enter city name..." required>
-                        <select id="days-select">
-                            <option value="1">1 Day</option>
-                            <option value="2">2 Days</option>
-                            <option value="3">3 Days</option>
-                            <option value="4">4 Days</option>
-                            <option value="5" selected>5 Days</option>
-                        </select>
-                        <button type="submit" class="btn btn-primary">Get Forecast</button>
-                    </div>
-                </form>
-            </div>
+          </a>
+          <button
+            class="theme-toggle"
+            id="theme-toggle"
+            aria-label="Toggle theme"
+          >
+            <span class="theme-icon" id="theme-icon">🌙</span>
+          </button>
         </div>
+      </header>
 
-        <!-- Loading Spinner -->
-        <div id="loading" class="loading hidden">
-            <div class="spinner"></div>
-            <p>Fetching weather data...</p>
+      <!-- Main Content -->
+      <div class="container">
+        <!-- Search Section -->
+        <div class="search-section">
+          <div class="search-tabs">
+            <button class="tab-btn active" data-tab="city">
+              Search by City
+            </button>
+            <button class="tab-btn" data-tab="coordinates">
+              Search by Coordinates
+            </button>
+            <button class="tab-btn" data-tab="forecast">Get Forecast</button>
+          </div>
+
+          <div class="search-forms">
+            <!-- City Search Form -->
+            <form id="city-form" class="search-form active">
+              <div class="form-group">
+                <input
+                  type="text"
+                  id="city-input"
+                  placeholder="Enter city name..."
+                  required
+                />
+                <button type="submit" class="btn btn-primary">Search</button>
+              </div>
+            </form>
+
+            <!-- Coordinates Search Form -->
+            <form id="coordinates-form" class="search-form">
+              <div class="form-group">
+                <input
+                  type="number"
+                  id="lat-input"
+                  placeholder="Latitude"
+                  step="0.0001"
+                  min="-90"
+                  max="90"
+                  required
+                />
+                <input
+                  type="number"
+                  id="lon-input"
+                  placeholder="Longitude"
+                  step="0.0001"
+                  min="-180"
+                  max="180"
+                  required
+                />
+                <button type="submit" class="btn btn-primary">Search</button>
+              </div>
+            </form>
+
+            <!-- Forecast Form -->
+            <form id="forecast-form" class="search-form">
+              <div class="form-group">
+                <input
+                  type="text"
+                  id="forecast-city-input"
+                  placeholder="Enter city name..."
+                  required
+                />
+                <select id="days-select">
+                  <option value="1">1 Day</option>
+                  <option value="2">2 Days</option>
+                  <option value="3">3 Days</option>
+                  <option value="4">4 Days</option>
+                  <option value="5" selected>5 Days</option>
+                </select>
+                <button type="submit" class="btn btn-primary">
+                  Get Forecast
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
 
         <!-- Error Message -->
         <div id="error" class="error hidden"></div>
 
-        <!-- Current Weather Display -->
-        <div id="weather-display" class="weather-display hidden">
-            <div class="weather-card">
-                <div class="weather-header">
-                    <h2 id="location-name"></h2>
-                    <p id="weather-time"></p>
+        <!-- Main Grid Layout -->
+        <div class="main-grid">
+          <!-- Main Content Area -->
+          <div class="main-content">
+            <!-- Loading Spinner -->
+            <div id="loading" class="loading hidden">
+              <div class="spinner"></div>
+              <p>Fetching weather data...</p>
+            </div>
+
+            <!-- Current Weather Display -->
+            <div id="weather-display" class="weather-display hidden">
+              <div class="weather-card">
+                <div class="weather-card-header">
+                  <div class="location-name" id="location-name"></div>
+                  <div class="weather-time" id="weather-time"></div>
                 </div>
-                <div class="weather-main">
-                    <div class="temperature">
+                <div class="weather-card-body">
+                  <div class="weather-main">
+                    <div class="temperature-section">
+                      <div class="temperature">
                         <span id="temp-value"></span>
-                        <span class="temp-unit">°C</span>
+                        <span class="unit">°C</span>
+                      </div>
+                      <div class="weather-description">
+                        <div class="main" id="weather-desc"></div>
+                        <div class="feels-like" id="feels-like"></div>
+                      </div>
                     </div>
-                    <div class="weather-icon">
-                        <img id="weather-icon" src="" alt="Weather icon">
+                    <div class="weather-icon-section">
+                      <img id="weather-icon" src="" alt="Weather icon" />
                     </div>
+                  </div>
+                  <div class="weather-details">
+                    <div class="detail-item">
+                      <div class="detail-icon">💧</div>
+                      <div class="detail-info">
+                        <div class="detail-label">Humidity</div>
+                        <div class="detail-value" id="humidity"></div>
+                      </div>
+                    </div>
+                    <div class="detail-item">
+                      <div class="detail-icon">💨</div>
+                      <div class="detail-info">
+                        <div class="detail-label">Wind Speed</div>
+                        <div class="detail-value" id="wind-speed"></div>
+                      </div>
+                    </div>
+                    <div class="detail-item">
+                      <div class="detail-icon">🌡️</div>
+                      <div class="detail-info">
+                        <div class="detail-label">Pressure</div>
+                        <div class="detail-value" id="pressure"></div>
+                      </div>
+                    </div>
+                    <div class="detail-item">
+                      <div class="detail-icon">☁️</div>
+                      <div class="detail-info">
+                        <div class="detail-label">Cloudiness</div>
+                        <div class="detail-value" id="clouds"></div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="weather-description">
-                    <p id="weather-desc"></p>
-                    <p id="feels-like"></p>
-                </div>
-                <div class="weather-details">
-                    <div class="detail-item">
-                        <span class="detail-label">Humidity</span>
-                        <span id="humidity" class="detail-value"></span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Wind Speed</span>
-                        <span id="wind-speed" class="detail-value"></span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Pressure</span>
-                        <span id="pressure" class="detail-value"></span>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-label">Cloudiness</span>
-                        <span id="clouds" class="detail-value"></span>
-                    </div>
-                </div>
+              </div>
             </div>
-        </div>
 
-        <!-- Forecast Display -->
-        <div id="forecast-display" class="forecast-display hidden">
-            <h2>Weather Forecast</h2>
-            <div id="forecast-location"></div>
-            <div id="forecast-cards" class="forecast-cards"></div>
-        </div>
+            <!-- Forecast Display -->
+            <div id="forecast-display" class="forecast-display hidden">
+              <div class="forecast-header">
+                <div class="forecast-title">Weather Forecast</div>
+                <div class="forecast-subtitle" id="forecast-location"></div>
+              </div>
+              <div id="forecast-cards" class="forecast-cards"></div>
+            </div>
+          </div>
 
-        <!-- Search History Section -->
-        <div class="history-section">
-            <div class="history-header">
+          <!-- Sidebar -->
+          <aside class="sidebar">
+            <!-- Quick Stats -->
+            <div class="stats-section" id="stats-section" style="display: none">
+              <div class="stats-title">Quick Stats</div>
+              <div class="stat-item">
+                <span class="stat-label">Total Searches</span>
+                <span class="stat-value" id="total-searches">0</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Cities Searched</span>
+                <span class="stat-value" id="cities-searched">0</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Last Search</span>
+                <span class="stat-value" id="last-search">-</span>
+              </div>
+            </div>
+
+            <!-- Search History -->
+            <div class="history-section">
+              <div class="history-header">
                 <h2>Search History</h2>
-                <button id="clear-history-btn" class="btn btn-secondary">Clear History</button>
-            </div>
-            <div id="history-list" class="history-list">
+                <button
+                  id="clear-history-btn"
+                  class="btn btn-secondary clear-history-btn"
+                >
+                  Clear
+                </button>
+              </div>
+              <div id="history-list" class="history-list">
                 <p class="no-history">No search history yet</p>
+              </div>
             </div>
+          </aside>
         </div>
+      </div>
+
+      <!-- Footer -->
+      <footer>
+        <p>Weather API Service - Powered by OpenWeatherMap</p>
+      </footer>
     </div>
 
-    <footer>
-        <p>Weather API Service - Built with FastAPI and OpenWeatherMap</p>
-    </footer>
-
     <script src="/static/js/app.js"></script>
-</body>
+  </body>
 </html>

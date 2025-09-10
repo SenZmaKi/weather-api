@@ -6,6 +6,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
+import os
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
@@ -68,6 +69,16 @@ app.include_router(weather_router)
 async def root() -> FileResponse:
     """Serve the main HTML page."""
     return FileResponse("templates/index.html")
+
+
+@app.get("/favicon.ico", response_class=FileResponse)
+async def favicon() -> FileResponse:
+    """Serve the favicon from the root path."""
+    favicon_path = os.path.join("static", "favicon.ico")
+    if os.path.exists(favicon_path):
+        return FileResponse(favicon_path)
+    # Return a 204 No Content if favicon doesn't exist
+    return FileResponse(status_code=204)
 
 
 @app.get("/health")
