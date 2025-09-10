@@ -2,6 +2,8 @@
 
 A modern Weather API service built with FastAPI, featuring external API integration with OpenWeatherMap, search history tracking, and a clean, responsive web interface.
 
+https://github.com/user-attachments/assets/eebd1b8a-5aaa-4549-91eb-433147f7d789
+
 ## Table of Contents
 
 - [Features](#features)
