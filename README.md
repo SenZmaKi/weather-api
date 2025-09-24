@@ -31,6 +31,7 @@ https://github.com/user-attachments/assets/eebd1b8a-5aaa-4549-91eb-433147f7d789
   - [Testing](#testing)
   - [Browser Testing](#browser-testing)
   - [API Documentation](#api-documentation)
+    - [Comprehensive Documentation](#comprehensive-documentation)
   - [Development](#development)
     - [Adding New Features](#adding-new-features)
     - [Database Migrations](#database-migrations)
@@ -301,7 +302,6 @@ curl "http://localhost:8000/health"
 FastAPI automatically generates interactive API documentation:
 
 - **Swagger UI**: http://localhost:8000/docs
-
   - Interactive API testing interface
   - Try out endpoints directly from the browser
   - View request/response schemas
@@ -309,6 +309,18 @@ FastAPI automatically generates interactive API documentation:
 - **ReDoc**: http://localhost:8000/redoc
   - Alternative documentation interface
   - Clean, readable API reference
+
+### Comprehensive Documentation
+
+For detailed documentation, see the [`docs/`](docs/) directory:
+
+- **[API Guide](docs/api.md)** - Detailed API documentation with examples and client libraries
+- **[Developer Guide](docs/development.md)** - Setup, development, and contribution guidelines
+- **[Architecture](docs/architecture.md)** - System design and technical architecture
+- **[Deployment Guide](docs/deployment.md)** - Production deployment instructions
+- **[Troubleshooting](docs/troubleshooting.md)** - Common issues and solutions
+- **[Examples](docs/examples.md)** - Code examples and usage patterns
+- **[Changelog](docs/changelog.md)** - Version history and release notes
 
 ## Development
 
