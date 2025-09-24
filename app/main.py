@@ -1,4 +1,24 @@
-"""Main FastAPI application module."""
+"""Main FastAPI application module.
+
+This module sets up the FastAPI application with all necessary middleware,
+routers, and configuration. It serves as the entry point for the Weather API service.
+
+Features:
+    - FastAPI application with async support
+    - CORS middleware for cross-origin requests
+    - Rate limiting to prevent API abuse
+    - Static file serving for the web interface
+    - Automatic API documentation generation
+    - Database initialization on startup
+    - Health check endpoint
+
+Example:
+    Run the application:
+        $ uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+    Or use UV:
+        $ uv run uvicorn app.main:app --reload
+"""
 
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
@@ -19,7 +39,19 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI) -> AsyncGenerator:
-    """Application lifespan manager."""
+    """
+    Application lifespan manager.
+    
+    Handles application startup and shutdown events:
+    - Startup: Initialize database schema
+    - Shutdown: Clean up resources and log shutdown
+    
+    Args:
+        app: FastAPI application instance
+        
+    Yields:
+        None: Control to the application during its lifetime
+    """
     # Startup
     await init_db()
     print("Database initialized")
@@ -83,7 +115,23 @@ async def favicon() -> FileResponse:
 
 @app.get("/health")
 async def health_check() -> dict:
-    """Health check endpoint."""
+    """
+    Health check endpoint.
+    
+    Provides a simple health check to verify the service is running.
+    This endpoint is not rate-limited and can be used by load balancers
+    and monitoring systems.
+    
+    Returns:
+        dict: Health status information containing:
+            - status: "healthy" if service is running
+            - service: Service name identifier
+    
+    Example:
+        >>> response = requests.get("http://localhost:8000/health")
+        >>> print(response.json())
+        {"status": "healthy", "service": "Weather API"}
+    """
     return {"status": "healthy", "service": "Weather API"}
 
 
