@@ -1,4 +1,32 @@
-"""API request and response schemas."""
+"""API request and response schemas.
+
+This module defines Pydantic models for request validation and response
+serialization. All API endpoints use these schemas to ensure type safety
+and generate accurate OpenAPI documentation.
+
+Features:
+    - Request parameter validation with constraints
+    - Response model serialization with proper types
+    - Automatic OpenAPI schema generation
+    - Custom JSON encoders for datetime objects
+    - Error response standardization
+
+Example:
+    Using a response schema:
+        weather_data = WeatherResponse(
+            city="London",
+            temperature=15.5,
+            timestamp=datetime.utcnow()
+        )
+        return weather_data  # Automatically serialized to JSON
+
+Models:
+    - WeatherResponse: Current weather data response
+    - ForecastResponse: Weather forecast response with multiple items
+    - ForecastItem: Individual forecast entry (3-hour interval)
+    - SearchHistoryResponse: Search history with pagination
+    - ErrorResponse: Standardized error information
+"""
 
 from typing import Optional, List
 from datetime import datetime

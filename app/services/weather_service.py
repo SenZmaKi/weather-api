@@ -1,4 +1,26 @@
-"""Weather service for OpenWeatherMap API integration."""
+"""Weather service for OpenWeatherMap API integration.
+
+This module provides the WeatherService class that handles all interactions
+with the OpenWeatherMap API. It includes methods for fetching current weather
+data and forecasts, with proper error handling and configuration management.
+
+Features:
+    - Current weather data by city name or coordinates
+    - Weather forecasts for 1-5 days with 3-hour intervals
+    - Async HTTP client with proper connection management
+    - Comprehensive error handling for API failures
+    - Metric units (Celsius) by default
+
+Example:
+    Basic usage:
+        service = WeatherService()
+        weather = await service.get_current_weather_by_city("London")
+        print(f"Temperature: {weather['main']['temp']}°C")
+
+Dependencies:
+    - httpx: For async HTTP requests
+    - app.config: For API key and base URL configuration
+"""
 
 from typing import Dict, Any
 import httpx
